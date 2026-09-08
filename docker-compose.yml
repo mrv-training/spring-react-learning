@@ -1,0 +1,61 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx-docker/Dockerfile.nginx
+    container_name: app-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - LEGO_DOMAIN=${LEGO_DOMAIN:-}
+      - LEGO_EMAIL=${LEGO_EMAIL:-}
+      - IS_LET_ENCRYPT=${IS_LET_ENCRYPT:-true}
+    volumes:
+      - ./lego_certs:/etc/lego
+      - ./namecheap_certs:/etc/certs
+      - ./lego_webroot:/var/www/acme
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - app
+    networks:
+      - app-net
+
+  app:
+    build:
+      context: .
+      dockerfile: webapp/Dockerfile
+      args:
+        - APP_PROFILE=${SPRING_PROFILES_ACTIVE:-dev}
+    image: base-structure-app
+    container_name: base-structure-app
+    restart: unless-stopped
+    volumes:
+      - ./logs/webapp:/opt/base-structure/logs
+      - ./config:/opt/base-structure/config
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      SERVER_PORT: 8080
+      DB_HOST: ${DB_HOST:-}
+      DB_PORT: ${DB_PORT:-}
+      DB_NAME: ${DB_NAME:-}
+      DB_USERNAME: ${DB_USERNAME:-}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+      APP_MAIL_USERNAME: ${APP_MAIL_USERNAME:-}
+      APP_MAIL_PASSWORD: ${APP_MAIL_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET:-}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      FACEBOOK_APP_ID: ${FACEBOOK_APP_ID:-}
+      FACEBOOK_APP_SECRET: ${FACEBOOK_APP_SECRET:-}
+      NO_REPLY_MAIL: ${NO_REPLY_MAIL:-}
+      DOMAIN_NAME: https://${LEGO_DOMAIN:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY_NOVAGENT:-}
+    ports:
+      - "8080"
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge

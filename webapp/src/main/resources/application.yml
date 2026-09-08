@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: ai-marketing-brief
+  
+  # Database Configuration - Easy switch between H2 and other DBs
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    # Defer SQL initialization until after Hibernate creates the schema
+    defer-datasource-initialization: true
+
+# JWT Configuration
+jwt:
+  secret: TQYyf9P-EwcjxuAW-54kMncCimM9s-ntbxQKk
+  access-token-validity: 900000  # 15 minutes
+  refresh-token-validity: 86400000  # 24 hours
+
+# Server Configuration
+server:
+  port: 8080
+
+# To switch to PostgreSQL, uncomment below and comment H2 config:
+# spring:
+#   datasource:
+#     url: jdbc:postgresql://localhost:5432/aimarketingbrief
+#     driver-class-name: org.postgresql.Driver
+#     username: postgres
+#     password: postgres
+#   jpa:
+#     database-platform: org.hibernate.dialect.PostgreSQLDialect
