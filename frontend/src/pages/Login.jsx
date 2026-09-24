@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import AppLogo from '../components/AppLogo'
 import './Login.css'
 
 const Login = () => {
@@ -13,7 +14,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/dashboard')
+      navigate('/products')
     }
   }, [user, navigate])
 
@@ -25,7 +26,7 @@ const Login = () => {
     const result = await login(username, password)
 
     if (result.success) {
-      navigate('/dashboard')
+      navigate('/products')
     } else {
       setError(result.error || 'Login failed')
     }
@@ -36,11 +37,12 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1>Base Application</h1>
+        <AppLogo size={72} to="" className="login-logo" />
+        <h1>Product Management Application</h1>
         <h2>Sign In</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label className="required" htmlFor="username">Username</label>
             <input
               type="text"
               id="username"
@@ -51,7 +53,7 @@ const Login = () => {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label className="required" htmlFor="password">Password</label>
             <input
               type="password"
               id="password"

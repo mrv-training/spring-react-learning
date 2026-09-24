@@ -1,0 +1,54 @@
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(20, 18, 30, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  cursor: zoom-out;
+}
+
+.image-lightbox img {
+  max-width: min(96vw, 1100px);
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+  cursor: default;
+}
+
+.image-lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #fff;
+  color: #333;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.image-lightbox-close:hover {
+  background: #ecebf2;
+}
+
+.image-open {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+  display: inline-flex;
+}
+
+.product-thumb.clickable,
+.detail-image img.clickable,
+.image-preview img.clickable {
+  cursor: zoom-in;
+}

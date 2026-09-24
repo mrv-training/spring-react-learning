@@ -53,11 +53,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (ExpiredJwtException e) {
             logger.warn("JWT expired");
+            writeUnauthorized(response, "JWT expired");
+            return;
         } catch (Exception e) {
             logger.error("JWT invalid", e);
+            writeUnauthorized(response, "JWT invalid");
+            return;
         }
 
         chain.doFilter(request, response);
+    }
+
+    private void writeUnauthorized(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"message\":\"" + message + "\"}");
     }
 
     @Override
@@ -65,6 +75,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.contains("/health") 
                 || path.contains("/api/auth/login")
+                || path.contains("/api/auth/refresh")
                 || path.contains("/api/auth/register");
     }
 }

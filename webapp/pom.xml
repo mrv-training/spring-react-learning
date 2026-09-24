@@ -13,9 +13,9 @@
     </parent>
 
     <groupId>com.base</groupId>
-    <artifactId>base-application-webapp</artifactId>
+    <artifactId>product-management-webapp</artifactId>
     <version>1.0.0</version>
-    <name>Base Application</name>
+    <name>Product Management Application</name>
     <description>General Purpose Spring Boot &amp; React Boilerplate</description>
 
     <properties>

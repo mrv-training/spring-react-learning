@@ -58,11 +58,9 @@ public class AuthController {
 		RefreshTokenEntity refreshToken = refreshTokenService.verifyRefreshToken(request.getRefreshToken());
 		UserEntity user = refreshToken.getUser();
 
+		refreshTokenService.deleteByUserId(user.getId());
 		String newAccessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getRole().name());
 		String newRefreshToken = refreshTokenService.createRefreshToken(user).getToken();
-
-		// Delete old refresh token
-		refreshTokenService.deleteByUserId(user.getId());
 
 		return ResponseEntity.ok(new LoginResponseDto(newAccessToken, newRefreshToken, user.getUsername(), user.getRole().name()));
 	}

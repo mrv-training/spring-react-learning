@@ -1,4 +1,4 @@
-# Base Application
+# Product Management Application
 
 Full-stack Spring Boot 3 + React application, packaged as a single JAR and deployed on Ubuntu with Docker Compose.
 
@@ -319,7 +319,7 @@ Single JAR (frontend built into `static/`):
 ```bash
 cd webapp
 mvn clean package -Pdev
-java -jar target/base-application-webapp-1.0.0.jar
+java -jar target/product-management-webapp-1.0.0.jar
 ```
 
 ---
@@ -370,3 +370,70 @@ curl -v http://127.0.0.1/health
 **Permission denied talking to Docker**
 
 Log out and back in after `usermod -aG docker`, or use `sudo docker compose ...`.
+
+---
+
+## Run locally for testing
+
+For local testing, run the **backend and frontend as two processes**. You need **Java 21**, **Maven**, and **Node 20+**.
+
+### 1. Start the Spring Boot API
+
+```bash
+cd webapp
+mvn spring-boot:run
+```
+
+Wait until it is listening on **http://localhost:8080**.
+
+Check:
+
+```bash
+curl http://localhost:8080/health
+```
+
+H2 is in-memory. Seed users load from `data.sql`. Data is gone after you stop the process.
+
+### 2. Start the React dev server
+
+In a **second** terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Vite serves **http://localhost:5173** and proxies `/api` to `http://localhost:8080`.
+
+Open **http://localhost:5173** in the browser (not 8080) while developing the UI.
+
+### Login
+
+| Role | Username | Password |
+| --- | --- | --- |
+| Admin | `admin` | `password123` |
+| User | `user` | `password123` |
+
+### Useful URLs
+
+| URL | What |
+| --- | --- |
+| http://localhost:5173 | UI (dev) |
+| http://localhost:8080/health | Health check |
+| http://localhost:8080/h2-console | H2 console (JDBC URL `jdbc:h2:mem:testdb`, user `sa`, empty password) |
+| http://localhost:8080/api/auth/login | Login API |
+
+### Optional: one JAR (closer to production)
+
+Use this when you want the built React files served by Spring, without Vite:
+
+```bash
+cd webapp
+mvn clean package -Pdev
+java -jar target/product-management-webapp-1.0.0.jar
+```
+
+Then open **http://localhost:8080**. First package can take a few minutes (Node + frontend build).
+
+Do **not** use `docker compose` for everyday local UI work. That path is for Ubuntu-style deploy (Nginx + TLS) and is slower to rebuild.

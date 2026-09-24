@@ -44,8 +44,15 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config
 
-    // If error is 401 and we haven't tried to refresh yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    const status = error.response?.status
+    const requestUrl = originalRequest?.url || ''
+    const canRefresh = Boolean(originalRequest)
+      && (status === 401 || status === 403)
+      && !originalRequest._retry
+      && !requestUrl.includes('/auth/')
+
+    // Expired access tokens used to come back as 403; refresh on either status.
+    if (canRefresh) {
       if (isRefreshing) {
         // If already refreshing, queue this request
         return new Promise((resolve, reject) => {

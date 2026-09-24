@@ -20,7 +20,7 @@ FROM eclipse-temurin:21-jre-alpine
 ENV TZ=Asia/Ho_Chi_Minh
 WORKDIR /app
 
-COPY --from=build /workspace/webapp/target/base-application-webapp-1.0.0.jar app.jar
+COPY --from=build /workspace/webapp/target/product-management-webapp-1.0.0.jar app.jar
 
 EXPOSE 8080
 

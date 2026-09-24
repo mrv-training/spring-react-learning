@@ -21,6 +21,9 @@ frontend/.vite/
 .DS_Store
 Thumbs.db
 
+# Uploaded product images
+uploads/
+
 # Logs
 *.log
 

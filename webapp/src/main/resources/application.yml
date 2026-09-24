@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ai-marketing-brief
+    name: product-management-application
   
   # Database Configuration - Easy switch between H2 and other DBs
   datasource:
@@ -24,6 +24,11 @@ spring:
         format_sql: true
     # Defer SQL initialization until after Hibernate creates the schema
     defer-datasource-initialization: true
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 # JWT Configuration
 jwt:

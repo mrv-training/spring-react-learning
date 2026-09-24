@@ -3,8 +3,10 @@ package com.base.service;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.base.config.JwtConfig;
 import com.base.entity.RefreshTokenEntity;
@@ -32,11 +34,11 @@ public class RefreshTokenService {
 
 	public RefreshTokenEntity verifyRefreshToken(String token) {
 		RefreshTokenEntity refreshToken = refreshTokenRepository.findByToken(token)
-				.orElseThrow(() -> new RuntimeException("Refresh token not found"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token not found"));
 
 		if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
 			refreshTokenRepository.delete(refreshToken);
-			throw new RuntimeException("Refresh token expired");
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Refresh token expired");
 		}
 
 		return refreshToken;
